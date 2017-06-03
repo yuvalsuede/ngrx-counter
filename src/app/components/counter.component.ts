@@ -1,26 +1,29 @@
-import {Component, Input} from '@angular/core';
-import {Observable} from 'rxjs/Observable';
-
-import {CounterActions} from '../store/counter/counter.actions';
-import {CounterService} from "../services/counter.service";
+import {Component, Input, Output, EventEmitter} from '@angular/core';
+import {Counter} from "../models/counter";
 
 @Component({
   selector: 'counter',
   template: `
     <p>
-      Clicked: {{ currentValue$ | async}} times
-      <button (click)="actions.increment()">+</button>
-      <button (click)="actions.decrement()">-</button>
-      <button (click)="actions.reset()">Reset</button>
+      Clicked: {{ counter?.currentValue}} times
+      <button (click)="onIncrement.emit()">+</button>
+      <button (click)="onDecrement.emit()">-</button>
+      <button (click)="onReset.emit()">Reset</button>
     </p>
 `
 })
 export class CounterComponent {
 
-  private currentValue$: Observable<number>;
+  @Input()
+  counter: Counter | undefined;
 
-  constructor( counterService: CounterService, public actions: CounterActions ) {
-    this.currentValue$ = counterService.getCurrentValue();
-  }
+  @Output()
+  onIncrement: EventEmitter<void> = new EventEmitter<void>();
+
+  @Output()
+  onDecrement: EventEmitter<void> = new EventEmitter<void>();
+
+  @Output()
+  onReset: EventEmitter<void> = new EventEmitter<void>();
 
 }
